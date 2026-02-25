@@ -267,14 +267,16 @@
         }
 
         .text-area {
-            padding: 15px 20px;
+            /* 只保留与图片之间的垂直间距，左右去掉额外缩进 */
+            padding: 15px 0 0 0;
             text-align: left;
-            line-height: 1.6;
+            line-height: 1.5;
             font-size: 30px;
         }
-
+        
         .text-area p {
-            text-indent: 2em;
+            /* 取消首行缩进，避免文字相对图片“往里缩”导致看起来不对齐 */
+            text-indent: 0;
             margin: 0;
         }
 
@@ -580,10 +582,34 @@
             downloadBtn.className = 'btn btn-primary';
             downloadBtn.textContent = '下载拼接图片';
             downloadBtn.addEventListener('click', function() {
-                const link = document.createElement('a');
-                link.href = generatedCanvas.toDataURL('image/png');
-                link.download = '拼接图片_' + new Date().getTime() + '.png';
-                link.click();
+                if (!generatedCanvas) return;
+
+                const dataUrl = generatedCanvas.toDataURL('image/png');
+                // 简单判断是否为 iOS（含带触摸的 M 芯片 Mac）
+                const ua = navigator.userAgent || navigator.vendor || window.opera;
+                const isIOS = /iPad|iPhone|iPod/.test(ua) ||
+                    (ua.includes('Macintosh') && 'ontouchend' in document);
+
+                if (isIOS) {
+                    // iOS Safari 不支持 a[download] + dataURL，直接新开窗口展示，用户长按保存
+                    const win = window.open();
+                    if (win) {
+                        win.document.write('<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1.0"></head><body style="margin:0;"><img src="' +
+                            dataUrl +
+                            '" style="width:100%;height:auto;display:block;"/></body></html>');
+                        win.document.close();
+                    } else {
+                        // 后备：直接跳转
+                        window.location.href = dataUrl;
+                    }
+                } else {
+                    const link = document.createElement('a');
+                    link.href = dataUrl;
+                    link.download = '拼接图片_' + new Date().getTime() + '.png';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                }
             });
             btnContainer.appendChild(downloadBtn);
             
