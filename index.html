@@ -222,7 +222,7 @@
 
         .image-grid {
             display: grid;
-            gap: 10px;
+            gap: 0;
         }
 
         /* 4张图片布局 */
@@ -250,6 +250,8 @@
 
         .grid-item {
             overflow: hidden;
+            padding: 10px;
+            box-sizing: border-box;
         }
 
         .two-images .grid-item {
@@ -264,6 +266,8 @@
             width: 100%;
             height: auto;
             display: block;
+            padding: 10px; /* 图片四周间距 10px */
+            box-sizing: border-box;
         }
 
         .text-area {
@@ -271,7 +275,7 @@
             padding: 15px 0 0 0;
             text-align: left;
             line-height: 1.5;
-            font-size: 30px;
+            font-size: 36px;
         }
         
         .text-area p {
