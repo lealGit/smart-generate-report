@@ -316,7 +316,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>前亭镇工作简报生成器</h1>
+        <h1>工作简报生成器</h1>
         
         <div class="controls">
             <div class="text-input">
@@ -580,7 +580,7 @@
             // 创建下载按钮
             const downloadBtn = document.createElement('button');
             downloadBtn.className = 'btn btn-primary';
-            downloadBtn.textContent = '下载拼接图片';
+            downloadBtn.textContent = '下载/长按图片保存';
             downloadBtn.addEventListener('click', function() {
                 if (!generatedCanvas) return;
 
