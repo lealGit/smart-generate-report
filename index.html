@@ -217,12 +217,13 @@
             background: white;
             overflow: hidden;
             max-width: 800px;
-            padding: 10px;
+            /* 生成大图四周保留 15px 空白 */
+            padding: 15px;
         }
 
         .image-grid {
             display: grid;
-            gap: 0;
+            gap: 10px;
         }
 
         /* 4张图片布局 */
@@ -250,8 +251,6 @@
 
         .grid-item {
             overflow: hidden;
-            padding: 10px;
-            box-sizing: border-box;
         }
 
         .two-images .grid-item {
@@ -266,8 +265,6 @@
             width: 100%;
             height: auto;
             display: block;
-            padding: 10px; /* 图片四周间距 10px */
-            box-sizing: border-box;
         }
 
         .text-area {
