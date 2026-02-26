@@ -273,8 +273,8 @@
             background: white;
             overflow: hidden;
             max-width: 650px; /* 调整整体画布为650px */
-            /* 生成大图四周保留 30px 空白 */
-            padding: 30px;
+            /* 生成大图四周保留 60px 空白 */
+            padding: 60px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -405,6 +405,11 @@
                         <input type="color" id="text-color" value="#000000">
                         <button class="btn btn-sm" id="red-color-btn" style="margin-left: 10px; background-color: red; color: white; border: none; padding: 2px 8px; border-radius: 3px; cursor: pointer;">红色</button>
                     </div>
+                    <div class="config-item">
+                        <label>画布间距: </label>
+                        <input type="number" id="canvas-padding" value="60" min="0" max="200">
+                        <span>px</span>
+                    </div>
                 </div>
             </div>
             <div class="text-input">
@@ -451,7 +456,8 @@
             textSize: 42,
             lineHeight: 1.2,
             imageSize: 650,
-            textColor: '#000000'
+            textColor: '#000000',
+            canvasPadding: 60
         };
         
         // DOM元素
@@ -470,6 +476,7 @@
         const imageSizeInput = document.getElementById('image-size');
         const textColorInput = document.getElementById('text-color');
         const redColorBtn = document.getElementById('red-color-btn');
+        const canvasPaddingInput = document.getElementById('canvas-padding');
         
         // 初始化
         function init() {
@@ -502,6 +509,12 @@
             redColorBtn.addEventListener('click', function() {
                 config.textColor = '#ff0000';
                 textColorInput.value = '#ff0000';
+                updateLayoutPreview();
+            });
+            
+            // 画布间距输入变化事件
+            canvasPaddingInput.addEventListener('change', function() {
+                config.canvasPadding = parseInt(this.value);
                 updateLayoutPreview();
             });
         }
@@ -718,7 +731,8 @@
             textArea.style.lineHeight = config.lineHeight;
             textArea.style.color = config.textColor;
             textArea.style.maxWidth = `${config.imageSize}px`;
-            previewWrapper.style.maxWidth = `${config.imageSize + 60}px`;
+            previewWrapper.style.padding = `${config.canvasPadding}px`;
+            previewWrapper.style.maxWidth = `${config.imageSize + config.canvasPadding * 2}px`;
             
             // 自动生成预览
             generatePreview();
@@ -823,12 +837,14 @@
                 config.lineHeight = 1.2;
                 config.imageSize = 650;
                 config.textColor = '#000000';
+                config.canvasPadding = 60;
                 
                 // 重置输入框
                 textSizeInput.value = config.textSize;
                 lineHeightInput.value = config.lineHeight;
                 imageSizeInput.value = config.imageSize;
                 textColorInput.value = config.textColor;
+                canvasPaddingInput.value = config.canvasPadding;
                 
                 updatePreviewGrid();
             });
