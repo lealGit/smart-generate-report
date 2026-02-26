@@ -400,6 +400,11 @@
                         <input type="number" id="image-size" value="650" min="100" max="800">
                         <span>px</span>
                     </div>
+                    <div class="config-item">
+                        <label>字体颜色: </label>
+                        <input type="color" id="text-color" value="#000000">
+                        <button class="btn btn-sm" id="red-color-btn" style="margin-left: 10px; background-color: red; color: white; border: none; padding: 2px 8px; border-radius: 3px; cursor: pointer;">红色</button>
+                    </div>
                 </div>
             </div>
             <div class="text-input">
@@ -445,7 +450,8 @@
         const config = {
             textSize: 42,
             lineHeight: 1.2,
-            imageSize: 650
+            imageSize: 650,
+            textColor: '#000000'
         };
         
         // DOM元素
@@ -462,6 +468,8 @@
         const textSizeInput = document.getElementById('text-size');
         const lineHeightInput = document.getElementById('line-height');
         const imageSizeInput = document.getElementById('image-size');
+        const textColorInput = document.getElementById('text-color');
+        const redColorBtn = document.getElementById('red-color-btn');
         
         // 初始化
         function init() {
@@ -481,6 +489,19 @@
             
             imageSizeInput.addEventListener('change', function() {
                 config.imageSize = parseInt(this.value);
+                updateLayoutPreview();
+            });
+            
+            // 字体颜色输入变化事件
+            textColorInput.addEventListener('change', function() {
+                config.textColor = this.value;
+                updateLayoutPreview();
+            });
+            
+            // 红色按钮点击事件
+            redColorBtn.addEventListener('click', function() {
+                config.textColor = '#ff0000';
+                textColorInput.value = '#ff0000';
                 updateLayoutPreview();
             });
         }
@@ -695,6 +716,7 @@
             // 应用配置样式
             textArea.style.fontSize = `${config.textSize}px`;
             textArea.style.lineHeight = config.lineHeight;
+            textArea.style.color = config.textColor;
             textArea.style.maxWidth = `${config.imageSize}px`;
             previewWrapper.style.maxWidth = `${config.imageSize + 60}px`;
             
@@ -800,11 +822,13 @@
                 config.textSize = 42;
                 config.lineHeight = 1.2;
                 config.imageSize = 650;
+                config.textColor = '#000000';
                 
                 // 重置输入框
                 textSizeInput.value = config.textSize;
                 lineHeightInput.value = config.lineHeight;
                 imageSizeInput.value = config.imageSize;
+                textColorInput.value = config.textColor;
                 
                 updatePreviewGrid();
             });
