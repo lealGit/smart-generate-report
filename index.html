@@ -131,6 +131,19 @@
             overflow: hidden;
             width: calc(25% - 10px);
             aspect-ratio: 1;
+            cursor: grab;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+        }
+
+        .preview-item.dragging {
+            opacity: 0.6;
+            border-color: #007bff;
+            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.3);
+        }
+
+        .preview-item.drag-over {
+            border-color: #007bff;
+            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.3);
         }
 
         .preview-item img {
@@ -355,6 +368,7 @@
         let uploadedImages = [];
         let generatedCanvas = null;
         let isUploading = false; // 上传状态标志
+        let dragSrcIndex = null; // 拖拽起始索引
         
         // 支持的图片数量
         const supportedCounts = [2, 4, 6, 8];
@@ -453,6 +467,8 @@
             uploadedImages.forEach((image, index) => {
                 const previewItem = document.createElement('div');
                 previewItem.className = 'preview-item';
+                previewItem.setAttribute('draggable', 'true');
+                previewItem.dataset.index = index;
                 previewItem.innerHTML = `
                     <img src="${image.url}" alt="预览图片">
                     <button class="remove-btn" data-index="${index}">×</button>
@@ -462,9 +478,55 @@
             
             // 添加删除按钮事件
             document.querySelectorAll('.remove-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
+                btn.addEventListener('click', function(event) {
+                    event.stopPropagation(); // 避免触发拖拽事件
                     const index = parseInt(this.dataset.index);
                     uploadedImages.splice(index, 1);
+                    updatePreviewGrid();
+                    updateLayoutPreview();
+                });
+            });
+
+            // 添加拖拽排序事件
+            document.querySelectorAll('.preview-item').forEach(item => {
+                item.addEventListener('dragstart', function(e) {
+                    dragSrcIndex = parseInt(this.dataset.index);
+                    this.classList.add('dragging');
+                    e.dataTransfer.effectAllowed = 'move';
+                });
+
+                item.addEventListener('dragend', function() {
+                    this.classList.remove('dragging');
+                    this.classList.remove('drag-over');
+                    dragSrcIndex = null;
+                });
+
+                item.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                    e.dataTransfer.dropEffect = 'move';
+                });
+
+                item.addEventListener('dragenter', function(e) {
+                    e.preventDefault();
+                    if (this.classList.contains('dragging')) return;
+                    this.classList.add('drag-over');
+                });
+
+                item.addEventListener('dragleave', function() {
+                    this.classList.remove('drag-over');
+                });
+
+                item.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    this.classList.remove('drag-over');
+                    const targetIndex = parseInt(this.dataset.index);
+                    if (dragSrcIndex === null || dragSrcIndex === targetIndex) return;
+
+                    const moved = uploadedImages.splice(dragSrcIndex, 1)[0];
+                    uploadedImages.splice(targetIndex, 0, moved);
+                    dragSrcIndex = null;
+
+                    // 根据新顺序重新渲染并自动生成拼接图
                     updatePreviewGrid();
                     updateLayoutPreview();
                 });
