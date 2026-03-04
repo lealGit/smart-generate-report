@@ -273,8 +273,8 @@
             background: white;
             overflow: hidden;
             max-width: 650px; /* 调整整体画布为650px */
-            /* 生成大图四周保留 60px 空白 */
-            padding: 60px;
+            /* 生成大图四周保留 30px 空白 */
+            padding: 30px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -407,13 +407,13 @@
                     </div>
                     <div class="config-item">
                         <label>画布间距: </label>
-                        <input type="number" id="canvas-padding" value="60" min="0" max="200">
+                        <input type="number" id="canvas-padding" value="30" min="0" max="200">
                         <span>px</span>
                     </div>
                 </div>
             </div>
             <div class="text-input">
-                <textarea placeholder="请输入图片下方的文字...">2月21日,前亭镇主要领导带队，统筹应急管理办、市场监督管理所、综合执法大队及派出所等多方力量，开展烟花爆竹领域安全隐患排查整治行动，紧盯零售店及仓储点位,对"五个严禁、三个务必"执行情况进行全覆盖复核与现场督导，进一步推动安全风险隐患动态清零，全力保障辖区平安稳定。</textarea>
+                <textarea placeholder="请输入图片下方的文字..."></textarea>
             </div>
         </div>
         
@@ -457,7 +457,7 @@
             lineHeight: 1.2,
             imageSize: 650,
             textColor: '#000000',
-            canvasPadding: 60
+            canvasPadding: 30
         };
         
         // DOM元素
@@ -838,7 +838,7 @@
                 config.lineHeight = 1.2;
                 config.imageSize = 650;
                 config.textColor = '#000000';
-                config.canvasPadding = 60;
+                config.canvasPadding = 30;
                 
                 // 重置输入框
                 textSizeInput.value = config.textSize;
