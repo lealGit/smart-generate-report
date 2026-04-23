@@ -118,6 +118,8 @@
             resize: vertical;
             min-height: 150px;
             font-size: 18px; /* 输入时的文字更大一些，便于预览 */
+            text-align: justify;
+            text-justify: inter-ideograph;
         }
 
         .upload-area {
@@ -288,6 +290,12 @@
             max-width: 650px;
         }
 
+        /* 1张图片布局 */
+        .image-grid.one-image {
+            grid-template-columns: 1fr;
+            grid-template-rows: auto;
+        }
+
         /* 4张图片布局 */
         .image-grid.four-images {
             grid-template-columns: repeat(2, 1fr);
@@ -332,7 +340,8 @@
         .text-area {
             /* 只保留与图片之间的垂直间距，左右去掉额外缩进 */
             padding: 15px 0 0 0;
-            text-align: left;
+            text-align: justify;
+            text-justify: inter-ideograph;
             line-height: 1.3;
             font-size: 42px; /* 导出的说明文字调整为42px */
             width: 100%;
@@ -342,6 +351,8 @@
             /* 首行缩进两个汉字字符 */
             text-indent: 2em;
             margin: 0;
+            text-align: justify;
+            text-justify: inter-ideograph;
         }
 
         @media (max-width: 1200px) {
@@ -421,7 +432,7 @@
             <input type="file" id="file-input" multiple accept="image/*">
             <label for="file-input">
                 <i>📷</i>
-                <p>点击或拖拽上传图片（最多8张）</p>
+                <p>点击或拖拽上传图片（支持 1、2、4、6 或 8 张，最多 8 张）</p>
             </label>
         </div>
         
@@ -449,7 +460,7 @@
         let isUploading = false; // 上传状态标志
         
         // 支持的图片数量
-        const supportedCounts = [2, 4, 6, 8];
+        const supportedCounts = [1, 2, 4, 6, 8];
         
         // 配置项
         const config = {
@@ -673,7 +684,7 @@
             
             // 验证图片数量
             if (!supportedCounts.includes(uploadedImages.length)) {
-                resultContainer.innerHTML = '<p style="color: red; text-align: center;">请上传2张、4张、6张或8张图片！</p>';
+                resultContainer.innerHTML = '<p style="color: red; text-align: center;">请上传 1、2、4、6 或 8 张图片！</p>';
                 return;
             }
             
@@ -682,7 +693,9 @@
             
             // 根据图片数量设置布局
             let gridClass = 'image-grid';
-            if (uploadedImages.length === 2) {
+            if (uploadedImages.length === 1) {
+                gridClass += ' one-image';
+            } else if (uploadedImages.length === 2) {
                 gridClass += ' two-images';
             } else if (uploadedImages.length === 4) {
                 gridClass += ' four-images';
